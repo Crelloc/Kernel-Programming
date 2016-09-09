@@ -14,8 +14,8 @@ clean:
 else
 
 $(info Building with KERNELRELEASE = ${KERNELRELEASE})
-obj-m += hello.o
-obj-m += plp.o
+
+obj-m += quote.o
 
 endif
 

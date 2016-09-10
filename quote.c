@@ -93,7 +93,7 @@ static ssize_t quote_read(struct file *filp, char __user *buf,
             size_t count, loff_t *f_pos) { 
     char message[] = "It's not what you know, it's what you can prove --Lonzo\n";
     ssize_t len = strlen(message);
-
+    
     /* Transfering data to user space */ 
     if (count < len)
         return -EFAULT;
@@ -104,4 +104,3 @@ static ssize_t quote_read(struct file *filp, char __user *buf,
     *f_pos += len;
     return len;
 }
-

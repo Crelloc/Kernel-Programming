@@ -26,7 +26,7 @@ MODULE_VERSION("0.1");
 /* global variables */
 
 static char message[256] = {0};
-static short size_of_message;
+static short size_of_message = 0;
 static __u32 majorNumber;		/* dynamically assigned at registration. */
 static struct device *char_dev = NULL;	/* dynamically allocated at runtime */
 static struct class *char_class = NULL;	/* pretend /sys/class */
@@ -74,9 +74,8 @@ static int dev_release(struct inode * inode, struct file * file)
 
 static ssize_t	dev_read(struct file * file, char __user * buf, size_t count,loff_t *ppos)
 {
-
 	if (count < size_of_message)
-        	return -EFAULT;
+		return -EFAULT;
 
     	if(copy_to_user((void __user *)buf, &message, size_of_message)){
     		printk(KERN_INFO DEVICE_NAME "Failed to send characters to the user\n");
@@ -84,8 +83,8 @@ static ssize_t	dev_read(struct file * file, char __user * buf, size_t count,loff
     	}
 
         printk(KERN_INFO DEVICE_NAME ": Sent %d characters to user\n", size_of_message);
-
-    	*ppos += size_of_message;
+	
+	*ppos += size_of_message;
     	return size_of_message;
 
 }
@@ -96,10 +95,10 @@ static ssize_t	dev_read(struct file * file, char __user * buf, size_t count,loff
 
 static ssize_t	dev_write(struct file * file, const char * buf, size_t count, loff_t *ppos)
 {
-	sprintf(message, "%s(%d letters)", buf, (int)count);
+	sprintf(message, "%s(%d letters)", buf, (int)strlen(buf));
 	size_of_message = strlen(message);
 	printk(KERN_INFO DEVICE_NAME ": Received %d characters from the user\n", (int)count);
-	return count;
+	return size_of_message;
 }
 
 static int __init char_init(void)
